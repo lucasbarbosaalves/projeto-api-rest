@@ -21,3 +21,8 @@ Para agilizar o processo de desenvolvimento, utilizamos o Nodemon, uma ferrament
 Através dos cursos da Alura, aprendemos a realizar a associação entre duas entidades do Mongo, as coleções de livros e autores, utilizando o recurso de populate.
 
 Estou muito grato à plataforma Alura por nos fornecer conhecimento e habilidades para a criação de APIs Restful e desenvolvimento de software em geral.
+
+## Últimas atualizações
+Criado classes para tratativas de erros que são recebidas por um middleware chamado manipuladorDeErros() para tornar a aplicação mais segura e tratar de requisições incorretas ou não encontradas.
+
+Refatorado o código utilizando async/await para evitar possíveis erros da programação assíncrona.
