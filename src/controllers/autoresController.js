@@ -1,10 +1,14 @@
-import autores from "../models/Autor.js";
+import NaoEncontrado from "../erros/NaoEncontrado.js";
+import { autores } from "../models/index.js";
 
 class AutorController {
-  static listarAutores = async (req, res) => {
+  static listarAutores = async (req, res, next) => {
     try {
-      const autoresResultado = await autores.find();
-      res.status(200).json(autoresResultado);
+      const autoresResultado = autores.find();
+
+      req.resultado = autoresResultado;
+
+      next();
     } catch (erro) {
       res.status(500).json({ message: "Erro interno no servidor" });
     }
@@ -19,7 +23,7 @@ class AutorController {
       if (autorResultado !== null) {
         res.status(200).send(autorResultado);
       } else {
-        res.status(404).send({ message: "Id do Autor não localizado." });
+        next(new NaoEncontrado("Id do Autor não localizado."));
       }
     } catch (erro) {
       next(erro);
@@ -41,23 +45,34 @@ class AutorController {
   static atualizarAutor = async (req, res, next) => {
     try {
       const id = req.params.id;
+  
+      const autorResultado = await autores.findByIdAndUpdate(id, {$set: req.body});
 
-      await autores.findByIdAndUpdate(id, { $set: req.body });
+      if (autorResultado !== null) {
+        res.status(200).send({message: "Autor atualizado com sucesso"});
+      } else {
+        next(new NaoEncontrado("Id do Autor não localizado."));
+      }
 
-      res.status(200).send({ message: "Autor atualizado com sucesso" });
     } catch (erro) {
       next(erro);
     }
   };
+
   static excluirAutor = async (req, res, next) => {
     try {
       const id = req.params.id;
 
-      await autores.findByIdAndDelete(id);
+      const autorResultado = await autores.findByIdAndDelete(id);
 
-      res.status(200).send({ message: "Autor removido com sucesso" });
+
+      if (autorResultado !== null) {
+        res.status(200).send({message: "Autor removido com sucesso"});
+      } else {
+        next(new NaoEncontrado("Id do Autor não localizado."));
+      }
     } catch (erro) {
-      next(erro);    
+      next(erro);
     }
   };
 }
